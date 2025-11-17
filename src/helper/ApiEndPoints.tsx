@@ -1,0 +1,14 @@
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+
+export const authEndPoints = {
+  LOGIN_API: `${BASE_URL}users/login`,};
+
+
+  export const employeeEndPoints = {
+  GET_Employee_API: `${BASE_URL}users/admin/all_users`,
+  GET_Employee_By_ID_API: `${BASE_URL}users/admin/user`,
+  UPDATE_Employee_API: `${BASE_URL}users/admin/update_user`,
+  CREATE_Employee_API: `${BASE_URL}users/admin/create_user`,
+  DELETE_Employee_API: `${BASE_URL}users/admin/delete_user`,
+};
