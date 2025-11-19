@@ -35,8 +35,8 @@ const roleMenuConfig: Record<UserRole, NavItem[]> = {
       path: '/profile',
     },
     {
-      icon: <UserCircleIcon />,
-      name: 'Employee',
+      icon: <BoxCubeIcon />,
+      name: 'Employees',
       path: '/employee',
     },
   ],
@@ -46,15 +46,16 @@ const roleMenuConfig: Record<UserRole, NavItem[]> = {
       name: 'Dashboard',
       subItems: [{ name: 'Overview', path: '/agent', pro: false }],
     },
-    {
-      icon: <BoxCubeIcon />,
-      name: 'Merchant',
-      path: '/agent/merchant',
-    },
+
     {
       icon: <UserCircleIcon />,
       name: 'Profile',
       path: '/agent/profile',
+    },
+    {
+      icon: <BoxCubeIcon />,
+      name: 'Merchant',
+      path: '/agent/merchant',
     },
   ],
   [UserRole.OPERATIONS]: [

@@ -5,7 +5,7 @@ import Input from '@/components/form/input/InputField';
 import Select from '@/components/form/Select';
 import Button from '@/components/ui/button/Button';
 import { CustomAlertContext } from '@/context/CustomAlertContext';
-import { employeeEndPoints } from '@/helper/ApiEndPoints';
+import { merchantEndPoints } from '@/helper/ApiEndPoints';
 import { apiConnector } from '@/network/Apiconnector';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
@@ -13,21 +13,15 @@ import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-interface EmployeeFormProps {
-  mode: string;
-  data: any;
+interface MerchantFormData {
+  name: string;
+  email: string;
+  mobile: string;
+  [key: string]: string;
 }
-const rolesOption = [
-  { value: 'agent', label: 'Agent' },
-  { value: 'operations', label: 'Operations' },
-  { value: 'support', label: 'Support' },
-];
-const shiftOption = [
-  { value: 'morning', label: 'Morning' },
-  { value: 'evening', label: 'Evening' },
-  { value: 'night', label: 'Night' },
-];
-const EmployeeValidation = yup.object().shape({
+type MerchantFormInterface = yup.InferType<typeof MerchantValidation>;
+
+const MerchantValidation = yup.object().shape({
   name: yup.string().required('Name is required *'),
   email: yup.string().email('Invalid Email').required('Email is required *'),
   mobile: yup
@@ -38,89 +32,104 @@ const EmployeeValidation = yup.object().shape({
   shift: yup.string().required('Shift is required *').trim(),
   role: yup.string().required('Role is required *').trim(),
 });
-const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
+
+export default function AddMerchantPage({ data = null }) {
   const router = useRouter();
-
+  const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<MerchantFormData>({
+    name: '',
+    email: '',
+    mobile: '',
+  });
 
-  const addForm = mode === 'add' ? true : false;
-  const { setToastNotification } = useContext(CustomAlertContext);
-
-  type EmployeeFormInterface = yup.InferType<typeof EmployeeValidation>;
-
-  const AddEmployeeApi = async (data: any) => {
-    await apiConnector({
-      method: 'POST',
-      url: employeeEndPoints?.CREATE_Employee_API,
-      bodyData: data,
-    })
-      .then((response: any) => {
-        setLoading(false);
-        setToastNotification(response?.data?.message, 'success');
-
-        reset();
-        router.push('/employee');
-      })
-      .catch((error: any) => {
-        setToastNotification(error?.message, 'error');
-        setLoading(false);
-      });
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const UpdateUserApi = async (formData: any) => {
-    console.log(data, 'dataaaaaaa');
+  //   const handleSubmit = async (e: React.FormEvent) => {
+  //     e.preventDefault();
 
-    await apiConnector({
-      method: 'PUT',
-      url: `${employeeEndPoints?.UPDATE_Employee_API}/${data?._id}`,
-      bodyData: formData,
-    })
-      .then((response: any) => {
-        setLoading(false);
-        setToastNotification(response?.data?.message, 'success');
-        router.push('/employee');
+  //     // Validation
+  //     if (!formData.name.trim() || !formData.email.trim() || !formData.mobile.trim()) {
+  //       setToastNotification('All fields are required', 'error');
+  //       return;
+  //     }
 
-        reset();
-      })
-      .catch((error: any) => {
-        setToastNotification(error?.message, 'error');
-        setLoading(false);
-      });
-  };
+  //     setLoading(true);
+
+  //     try {
+  //       const response = await apiConnector({
+  //         method: 'POST',
+  //         url: merchantEndPoints?.CREATE_MERCHANT_API,
+  //         bodyData: formData,
+  //       });
+
+  //       if (response?.data?.data) {
+  //         setToastNotification('Merchant added successfully', 'success');
+  //         router.push('/agent/merchant');
+  //       }
+  //     } catch (error: any) {
+  //       setToastNotification(error?.message || 'Failed to add merchant', 'error');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
   const {
     control,
     handleSubmit,
     formState: { errors },
-    reset,
-  } = useForm<EmployeeFormInterface>({
-    resolver: yupResolver(EmployeeValidation),
+  } = useForm<MerchantFormInterface>({
+    resolver: yupResolver(MerchantValidation),
     defaultValues: {
       name: data ? data?.name : '',
       email: data ? data?.email : '',
       mobile: data ? data?.mobile : '',
-      shift: data ? data?.shift : '',
-      role: data ? data?.role : '',
     },
   });
 
   // console.log(data?.name,"defaultValues");
 
   const onSubmitHandler = (data: any) => {
-    if (addForm) {
-      console.log(addForm, 'adsf');
-
-      AddEmployeeApi(data);
-    } else {
-      UpdateUserApi(data);
-    }
+    console.log(data, 'dataaa');
   };
-
   return (
-    <>
-      {/* <PageBreadcrumb pageTitle="Employee Form" /> */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-10">
-        <div className="col-span-1 md:col-span-10 lg:col-span-12">
+    <div className="grid grid-cols-12 gap-4 md:gap-6">
+      <div className="col-span-12">
+        <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Add New Merchant</h1>
+            <button
+              onClick={() => router.back()}
+              className="text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Add Merchant Form */}
+      <div className="col-span-12 md:col-span-12">
+        {/* <form onSubmit={handleSubmit} className="space-y-6"> */}
+        <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+          <h2 className="mb-6 text-lg font-semibold text-gray-800 dark:text-white">
+            Merchant Information
+          </h2>
+
+          {/* Merchant Name */}
           <ComponentCard title="Employee Form">
             <div className="mx-6 space-y-4">
               <form
@@ -129,9 +138,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
                   e.preventDefault();
                   handleSubmit(onSubmitHandler)(e);
                 }}
-                //   onSubmit={handleSubmit(onSubmitHandler)}
-                // className="w-full px-6 py-6"
-                // noValidate
               >
                 <h2 className="mb-2 text-white">Add User</h2>
                 <Input
@@ -161,24 +167,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
                   error={errors?.mobile?.message}
                   control={control}
                 />
-                <Select
-                  error={errors?.role?.message}
-                  label="Employee shift"
-                  options={shiftOption}
-                  placeholder="Select shift"
-                  control={control}
-                  name="shift"
-                  className="dark:bg-dark-900"
-                />
-                <Select
-                  error={errors?.role?.message}
-                  label="Employee Role"
-                  options={rolesOption}
-                  placeholder="Select role"
-                  control={control}
-                  name="role"
-                  className="dark:bg-dark-900"
-                />
+
                 <div className="mb-4 flex justify-end">
                   <Button
                     size="sm"
@@ -195,9 +184,8 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
             </div>
           </ComponentCard>
         </div>
+        {/* </form> */}
       </div>
-    </>
+    </div>
   );
-};
-
-export default EmployeeForm;
+}
