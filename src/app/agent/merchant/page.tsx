@@ -8,9 +8,9 @@ import React, { useContext, useState } from 'react';
 
 interface MerchantData {
   id?: string;
-  name?: string;
+  merchant_name?: string;
   email?: string;
-  mobile?: string;
+  mobile_number?: string;
 }
 
 export default function MerchantPage() {
@@ -20,6 +20,7 @@ export default function MerchantPage() {
   const [merchantNumber, setMerchantNumber] = useState('');
   const [merchantData, setMerchantData] = useState<MerchantData | null>(null);
   const [searched, setSearched] = useState(false);
+  console.log(merchantData, 'merchantData');
 
   const searchMerchant = async () => {
     // Validation: Check if merchant number is entered
@@ -34,7 +35,7 @@ export default function MerchantPage() {
 
     try {
       // Build the API URL
-      const apiUrl = `${merchantEndPoints?.GET_MERCHANT_By_NUMBER_API}/${merchantNumber}`;
+      const apiUrl = `${merchantEndPoints?.GET_MERCHANT_By_NUMBER_API}${merchantNumber}`;
       console.log('🔍 Searching merchant with URL:', apiUrl);
 
       // Make API call
@@ -47,7 +48,7 @@ export default function MerchantPage() {
 
       // Check if merchant data exists in response
       if (response?.data?.data) {
-        setMerchantData(response?.data?.data);
+        setMerchantData(response?.data?.data[0]);
         setSearched(true);
         setToastNotification('Merchant found!', 'success');
       } else if (response?.status === 200) {
@@ -162,8 +163,8 @@ export default function MerchantPage() {
                       <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
                         Merchant Name
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-gray-800 dark:text-white">
-                        {merchantData.name || 'N/A'}
+                      <p className="mt-2 line-clamp-3 text-lg font-semibold text-gray-800 dark:text-white">
+                        {merchantData?.merchant_name || 'N/A'}
                       </p>
                     </div>
 
@@ -173,7 +174,7 @@ export default function MerchantPage() {
                         Mobile Number
                       </p>
                       <p className="mt-2 text-lg font-semibold text-gray-800 dark:text-white">
-                        {merchantData.mobile || 'N/A'}
+                        {merchantData?.mobile_number || 'N/A'}
                       </p>
                     </div>
 
@@ -182,7 +183,7 @@ export default function MerchantPage() {
                       <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
                         Email Address
                       </p>
-                      <p className="mt-2 text-lg font-semibold text-gray-800 dark:text-white">
+                      <p className="mt-2 line-clamp-3 text-lg font-semibold text-gray-800 dark:text-white">
                         {merchantData.email || 'N/A'}
                       </p>
                     </div>

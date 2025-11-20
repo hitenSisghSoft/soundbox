@@ -23,6 +23,18 @@ const MerchantValidation = yup.object().shape({
   shift: yup.string().required('Shift is required *').trim(),
   role: yup.string().required('Role is required *').trim(),
   company_name: yup.string().required('Role is required *').trim(),
+  address: yup.string().required('Address is required *'),
+  city: yup.string().required('City is required *'),
+  state: yup.string().required('State is required *'),
+  country: yup.string().required('Country is required *'),
+  zip_code: yup
+    .string()
+    .required('ZipCode is required *')
+    .max(6, "ZipCode can't be more than 6 digits")
+    .min(4, 'ZipCode must be at least 4 digits'),
+  pan_number: yup.string().required('Pan Number is required *'),
+  gst_number: yup.string().required('Gst Number is required *'),
+  temporary_account_number: yup.string().required('Temporary Account Number is required *'),
 });
 
 export default function AddMerchantPage({ data = null }) {
@@ -70,6 +82,7 @@ export default function AddMerchantPage({ data = null }) {
       email: data ? data?.email : '',
       mobile: data ? data?.mobile : '',
       company_name: data ? data?.company_name : '',
+      address: data ? data?.address : '',
     },
   });
 
@@ -169,6 +182,94 @@ export default function AddMerchantPage({ data = null }) {
                       name="company_name"
                       label="Company Name"
                       error={errors?.company_name?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Address "
+                      name="address"
+                      label="Address"
+                      error={errors?.address?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter City name"
+                      name="city"
+                      label="City"
+                      error={errors?.city?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter State name"
+                      name="state"
+                      label="State"
+                      error={errors?.state?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Country"
+                      name="country"
+                      label="Country Name"
+                      error={errors?.country?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="Number"
+                      id="input"
+                      placeholder="Enter ZipCode "
+                      name="zip_code"
+                      label="ZipCode"
+                      error={errors?.zip_code?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter PanNumber "
+                      name="pan_number"
+                      label="Pan Number"
+                      error={errors?.pan_number?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter GST Number "
+                      name="gst_number"
+                      label="GST Number"
+                      error={errors?.gst_number?.message}
+                      control={control}
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Temporary Account Number"
+                      name="temporary_account_number"
+                      label="Temporary Account"
+                      error={errors?.temporary_account_number?.message}
                       control={control}
                     />
                   </div>
