@@ -2,23 +2,14 @@
 
 import ComponentCard from '@/components/common/ComponentCard';
 import Input from '@/components/form/input/InputField';
-import Select from '@/components/form/Select';
 import Button from '@/components/ui/button/Button';
 import { CustomAlertContext } from '@/context/CustomAlertContext';
-import { merchantEndPoints } from '@/helper/ApiEndPoints';
-import { apiConnector } from '@/network/Apiconnector';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 
-interface MerchantFormData {
-  name: string;
-  email: string;
-  mobile: string;
-  [key: string]: string;
-}
 type MerchantFormInterface = yup.InferType<typeof MerchantValidation>;
 
 const MerchantValidation = yup.object().shape({
@@ -31,25 +22,13 @@ const MerchantValidation = yup.object().shape({
     .min(10, 'Mobile number must be at least 10 digits'),
   shift: yup.string().required('Shift is required *').trim(),
   role: yup.string().required('Role is required *').trim(),
+  company_name: yup.string().required('Role is required *').trim(),
 });
 
 export default function AddMerchantPage({ data = null }) {
   const router = useRouter();
   const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<MerchantFormData>({
-    name: '',
-    email: '',
-    mobile: '',
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
 
   //   const handleSubmit = async (e: React.FormEvent) => {
   //     e.preventDefault();
@@ -90,6 +69,7 @@ export default function AddMerchantPage({ data = null }) {
       name: data ? data?.name : '',
       email: data ? data?.email : '',
       mobile: data ? data?.mobile : '',
+      company_name: data ? data?.company_name : '',
     },
   });
 
@@ -139,34 +119,60 @@ export default function AddMerchantPage({ data = null }) {
                   handleSubmit(onSubmitHandler)(e);
                 }}
               >
-                <h2 className="mb-2 text-white">Add User</h2>
-                <Input
-                  type="text"
-                  id="input"
-                  placeholder="Enter Name here"
-                  label="Name"
-                  error={errors?.name?.message}
-                  control={control}
-                  name="name"
-                />
-                <Input
-                  type="text"
-                  id="input"
-                  placeholder="Enter Email here"
-                  name="email"
-                  label="Email"
-                  error={errors?.email?.message}
-                  control={control}
-                />
-                <Input
-                  type="number"
-                  id="input"
-                  placeholder="Enter Mobile here"
-                  name="mobile"
-                  label="Mobile"
-                  error={errors?.mobile?.message}
-                  control={control}
-                />
+                {/* Two Column Layout */}
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  {/* Name - Half Width */}
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Name here"
+                      label="Name"
+                      error={errors?.name?.message}
+                      control={control}
+                      name="name"
+                    />
+                  </div>
+
+                  {/* Email - Half Width */}
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Email here"
+                      name="email"
+                      label="Email"
+                      error={errors?.email?.message}
+                      control={control}
+                    />
+                  </div>
+
+                  {/* Mobile - Half Width */}
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Mobile here"
+                      name="mobile"
+                      label="Mobile"
+                      error={errors?.mobile?.message}
+                      control={control}
+                    />
+                  </div>
+
+                  {/* Company Name - Half Width */}
+                  <div>
+                    <Input
+                      type="text"
+                      id="input"
+                      placeholder="Enter Company name"
+                      name="company_name"
+                      label="Company Name"
+                      error={errors?.company_name?.message}
+                      control={control}
+                    />
+                  </div>
+                </div>
 
                 <div className="mb-4 flex justify-end">
                   <Button

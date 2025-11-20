@@ -143,52 +143,55 @@ export default function EditMerchantPage() {
               Update Merchant Information
             </h2>
 
-            {/* Merchant Name */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Merchant Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                placeholder="Enter merchant name"
-                required
-                className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-              />
-            </div>
+            {/* Two Column Layout for Form Fields */}
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              {/* Merchant Name */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Merchant Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter merchant name"
+                  required
+                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
+                />
+              </div>
 
-            {/* Email */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email Address <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                placeholder="Enter email address"
-                required
-                className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-              />
-            </div>
+              {/* Email */}
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Email Address <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter email address"
+                  required
+                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
+                />
+              </div>
 
-            {/* Mobile Number */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Mobile Number <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="mobile"
-                value={formData.mobile}
-                onChange={handleInputChange}
-                placeholder="Enter mobile number"
-                required
-                className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-              />
+              {/* Mobile Number */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Mobile Number <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="mobile"
+                  value={formData.mobile}
+                  onChange={handleInputChange}
+                  placeholder="Enter mobile number"
+                  required
+                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
+                />
+              </div>
             </div>
 
             {/* Action Buttons */}
