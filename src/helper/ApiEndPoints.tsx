@@ -14,8 +14,9 @@ export const employeeEndPoints = {
 
 export const merchantEndPoints = {
   GET_MERCHANT_By_NUMBER_API: `${BASE_URL}merchants/search/mobile?mobile_number=`,
+  GET_MERCHANT_By_ID_API: `${BASE_URL}merchants`,
   CREATE_MERCHANT_API: `${BASE_URL}merchant/create`,
-  UPDATE_MERCHANT_API: `${BASE_URL}merchant/update`,
+  UPDATE_MERCHANT_API: `${BASE_URL}merchants/update`,
   DELETE_MERCHANT_API: `${BASE_URL}merchant/delete`,
   GET_ALL_MERCHANTS_API: `${BASE_URL}merchant/list`,
 };

@@ -1,8 +1,8 @@
-import { Control, Controller, FieldValues, Path } from "react-hook-form";
-import Label from "./Label";
+import { Control, Controller, FieldValues, Path } from 'react-hook-form';
+import Label from './Label';
 
 interface InputProps<T extends FieldValues = FieldValues> {
-  type?: "text" | "number" | "email" | "password" | "date" | "time" | string;
+  type?: 'text' | 'number' | 'email' | 'password' | 'date' | 'time' | string;
   id?: string;
   name: Path<T>; // Required and strongly typed
   label?: string;
@@ -18,21 +18,21 @@ interface InputProps<T extends FieldValues = FieldValues> {
 }
 
 const Input = <T extends FieldValues>({
-  label = "",
-  type = "text",
+  label = '',
+  type = 'text',
   id,
   name,
   placeholder,
-  className = "",
+  className = '',
   min,
   max,
   step,
   disabled = false,
   success = false,
-  error = "",
+  error = '',
   control,
 }: InputProps<T>) => {
-  let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 text-white dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
+  let inputClasses = `h-11 w-full rounded-lg border appearance-none px-4 py-2.5 text-sm shadow-theme-xs placeholder:text-gray-400 focus:outline-hidden focus:ring-3 text-black dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 ${className}`;
 
   if (disabled) {
     inputClasses += ` text-gray-500 border-gray-300 opacity-40 bg-gray-100 cursor-not-allowed dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700`;
@@ -52,7 +52,6 @@ const Input = <T extends FieldValues>({
           control={control}
           name={name}
           render={({ field: { onChange, onBlur, value } }) => (
-            
             <input
               type={type}
               id={id || name}
@@ -69,11 +68,7 @@ const Input = <T extends FieldValues>({
             />
           )}
         />
-        {error && (
-          <p className="mt-1.5 text-xs text-error-500">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-error-500 mt-1.5 text-xs">{error}</p>}
       </div>
     </div>
   );

@@ -68,8 +68,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
   };
 
   const UpdateUserApi = async (formData: any) => {
-    console.log(data, 'dataaaaaaa');
-
     await apiConnector({
       method: 'PUT',
       url: `${employeeEndPoints?.UPDATE_Employee_API}/${data?._id}`,
@@ -104,12 +102,8 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
     },
   });
 
-  // console.log(data?.name,"defaultValues");
-
   const onSubmitHandler = (data: any) => {
     if (addForm) {
-      console.log(addForm, 'adsf');
-
       AddEmployeeApi(data);
     } else {
       UpdateUserApi(data);
@@ -125,7 +119,6 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({ mode = 'add', data }) => {
             <div className="mx-6 space-y-4">
               <form
                 onSubmit={(e) => {
-                  console.log('FORM NATIVE SUBMIT');
                   e.preventDefault();
                   handleSubmit(onSubmitHandler)(e);
                 }}

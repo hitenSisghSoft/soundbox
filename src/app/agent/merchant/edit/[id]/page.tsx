@@ -1,18 +1,33 @@
 'use client';
 
+import Input from '@/components/common/InputField';
+import Button from '@/components/ui/button/Button';
 import { CustomAlertContext } from '@/context/CustomAlertContext';
 import { merchantEndPoints } from '@/helper/ApiEndPoints';
 import { apiConnector } from '@/network/Apiconnector';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter, useParams } from 'next/navigation';
 import React, { useContext, useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 interface MerchantFormData {
   id?: string;
-  name: string;
+  merchant_name: string;
   email: string;
-  mobile: string;
+  mobile_number: string;
   [key: string]: string | undefined;
 }
+
+const EmployeeValidation = yup.object().shape({
+  merchant_name: yup.string().required('Merchant Name is required *'),
+  email: yup.string().email('Invalid Email').required('Email is required *'),
+  mobile_number: yup
+    .string()
+    .required('Mobile is required *')
+    .max(10, "Mobile number can't be more than 10 digits")
+    .min(10, 'Mobile number must be at least 10 digits'),
+});
 
 export default function EditMerchantPage() {
   const router = useRouter();
@@ -21,28 +36,26 @@ export default function EditMerchantPage() {
   const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [formData, setFormData] = useState<MerchantFormData>({
-    name: '',
-    email: '',
-    mobile: '',
-  });
 
   // Fetch merchant data on mount
   useEffect(() => {
+    setFetching(true);
     const fetchMerchantData = async () => {
       try {
         const response = await apiConnector({
           method: 'GET',
-          url: `${merchantEndPoints?.GET_MERCHANT_By_NUMBER_API}/${merchantId}`,
+          url: `${merchantEndPoints?.GET_MERCHANT_By_ID_API}/${merchantId}`,
         });
 
-        if (response?.data?.data) {
-          setFormData({
-            id: response?.data?.data?.id,
-            name: response?.data?.data?.name || '',
-            email: response?.data?.data?.email || '',
-            mobile: response?.data?.data?.mobile || '',
+        const data = response?.data?.data?.[0];
+        if (data) {
+          // setFormData(response?.data?.data[0]);
+          reset({
+            merchant_name: data.merchant_name || '',
+            email: data.email || '',
+            mobile_number: data.mobile_number || '',
           });
+          // setFetching(false);
         } else {
           setToastNotification('Merchant not found', 'error');
           router.push('/agent/merchant');
@@ -50,6 +63,7 @@ export default function EditMerchantPage() {
       } catch (error: any) {
         setToastNotification(error?.message || 'Failed to fetch merchant', 'error');
         router.push('/agent/merchant');
+        // setFetching(false);
       } finally {
         setFetching(false);
       }
@@ -58,47 +72,40 @@ export default function EditMerchantPage() {
     if (merchantId) {
       fetchMerchantData();
     }
-  }, [merchantId, router, setToastNotification]);
+  }, [merchantId, router]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<MerchantFormData>({
+    resolver: yupResolver(EmployeeValidation),
+    defaultValues: {
+      merchant_name: '',
+      email: '',
+      mobile_number: '',
+    },
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // Validation
-    if (!formData.name.trim() || !formData.email.trim() || !formData.mobile.trim()) {
-      setToastNotification('All fields are required', 'error');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await apiConnector({
-        method: 'PUT',
-        url: `${merchantEndPoints?.UPDATE_MERCHANT_API}/${merchantId}`,
-        bodyData: {
-          name: formData.name,
-          email: formData.email,
-          mobile: formData.mobile,
-        },
-      });
-
-      if (response?.data?.data) {
-        setToastNotification('Merchant updated successfully', 'success');
+  const onSubmitHandler = async (data: any) => {
+    setLoading(false);
+    await apiConnector({
+      method: 'PUT',
+      url: `${merchantEndPoints?.UPDATE_MERCHANT_API}/${merchantId}`,
+      bodyData: data,
+    })
+      .then((response: any) => {
+        setLoading(false);
+        setToastNotification(response?.data?.message, 'success');
         router.push('/agent/merchant');
-      }
-    } catch (error: any) {
-      setToastNotification(error?.message || 'Failed to update merchant', 'error');
-    } finally {
-      setLoading(false);
-    }
+
+        reset();
+      })
+      .catch((error: any) => {
+        setToastNotification(error?.message, 'error');
+        setLoading(false);
+      });
   };
 
   if (fetching) {
@@ -136,83 +143,62 @@ export default function EditMerchantPage() {
       </div>
 
       {/* Edit Merchant Form */}
-      <div className="col-span-12 md:col-span-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-            <h2 className="mb-6 text-lg font-semibold text-gray-800 dark:text-white">
-              Update Merchant Information
-            </h2>
-
-            {/* Two Column Layout for Form Fields */}
+      <div className="col-span-12 md:col-span-12">
+        <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+          <h2 className="mb-6 text-lg font-semibold text-gray-800 dark:text-white">
+            Update Merchant Information
+          </h2>
+          <form
+            onSubmit={(e) => {
+              handleSubmit(onSubmitHandler)(e);
+            }}
+            className="space-y-6"
+          >
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Merchant Name */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Merchant Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter merchant name"
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-                />
-              </div>
-
-              {/* Email */}
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter email address"
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-                />
-              </div>
-
-              {/* Mobile Number */}
-              <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Mobile Number <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="tel"
-                  name="mobile"
-                  value={formData.mobile}
-                  onChange={handleInputChange}
-                  placeholder="Enter mobile number"
-                  required
-                  className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2 outline-none dark:border-gray-800 dark:bg-gray-800 dark:text-white"
-                />
-              </div>
+              <Input
+                type="text"
+                id="input"
+                placeholder="Enter Merchant Name "
+                label="Merchant Name"
+                error={errors?.merchant_name?.message}
+                control={control}
+                name="merchant_name"
+              />
+              <Input
+                type="text"
+                id="input"
+                placeholder="Enter Email  "
+                label="Email"
+                error={errors?.email?.message}
+                control={control}
+                name="email"
+              />
+              <Input
+                type="number"
+                id="input"
+                placeholder="Enter Mobile here"
+                name="mobile_number"
+                label="Mobile"
+                error={errors?.mobile_number?.message}
+                control={control}
+              />
             </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 pt-4">
-              <button
-                type="submit"
+            <div className="mb-4 flex justify-end">
+              <Button
+                size="sm"
+                variant="primary"
+                customBg="bg-brand-500"
+                className="mt-5 px-12"
                 disabled={loading}
-                className="bg-brand-500 hover:bg-brand-600 flex-1 rounded-lg px-6 py-2 text-sm font-medium text-white transition disabled:opacity-50"
+                type="submit"
               >
-                {loading ? 'Updating...' : 'Update Merchant'}
-              </button>
-              <button
-                type="button"
-                onClick={() => router.back()}
-                className="flex-1 rounded-lg border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                Cancel
-              </button>
+                Edit
+              </Button>
             </div>
-          </div>
-        </form>
+          </form>
+
+          {/* Action Buttons */}
+        </div>
       </div>
     </div>
   );

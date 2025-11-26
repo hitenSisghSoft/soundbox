@@ -83,8 +83,8 @@ export default function MerchantPage() {
   };
 
   const handleEditMerchant = () => {
-    if (merchantData?.id) {
-      router.push(`/agent/merchant/edit/${merchantData.id}`);
+    if (merchantData?._id) {
+      router.push(`/agent/merchant/edit/${merchantData._id}`);
     }
   };
 
