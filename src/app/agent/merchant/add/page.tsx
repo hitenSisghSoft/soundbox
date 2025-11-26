@@ -4,6 +4,8 @@ import ComponentCard from '@/components/common/ComponentCard';
 import Input from '@/components/form/input/InputField';
 import Button from '@/components/ui/button/Button';
 import { CustomAlertContext } from '@/context/CustomAlertContext';
+import { merchantEndPoints } from '@/helper/ApiEndPoints';
+import { apiConnector } from '@/network/Apiconnector';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
@@ -13,15 +15,13 @@ import * as yup from 'yup';
 type MerchantFormInterface = yup.InferType<typeof MerchantValidation>;
 
 const MerchantValidation = yup.object().shape({
-  name: yup.string().required('Name is required *'),
+  merchant_name: yup.string().required('Name is required *'),
   email: yup.string().email('Invalid Email').required('Email is required *'),
-  mobile: yup
+  mobile_number: yup
     .string()
     .required('Mobile is required *')
     .max(10, "Mobile number can't be more than 10 digits")
     .min(10, 'Mobile number must be at least 10 digits'),
-  shift: yup.string().required('Shift is required *').trim(),
-  role: yup.string().required('Role is required *').trim(),
   company_name: yup.string().required('Role is required *').trim(),
   address: yup.string().required('Address is required *'),
   city: yup.string().required('City is required *'),
@@ -32,8 +32,18 @@ const MerchantValidation = yup.object().shape({
     .required('ZipCode is required *')
     .max(6, "ZipCode can't be more than 6 digits")
     .min(4, 'ZipCode must be at least 4 digits'),
-  pan_number: yup.string().required('Pan Number is required *'),
-  gst_number: yup.string().required('Gst Number is required *'),
+  pan_number: yup
+    .string()
+    .required('Pan Number is required *')
+    .matches(/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/, 'Invalid PAN format (e.g., ABCDE1234F)'),
+  gst_number: yup
+    .string()
+    .required('Gst Number is required *')
+    .matches(
+      /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+      'Invalid GST number format'
+    )
+    .max(15, "GST Number can't be more than 15 digits"),
   temporary_account_number: yup.string().required('Temporary Account Number is required *'),
 });
 
@@ -42,54 +52,38 @@ export default function AddMerchantPage({ data = null }) {
   const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [loading, setLoading] = useState(false);
 
-  //   const handleSubmit = async (e: React.FormEvent) => {
-  //     e.preventDefault();
-
-  //     // Validation
-  //     if (!formData.name.trim() || !formData.email.trim() || !formData.mobile.trim()) {
-  //       setToastNotification('All fields are required', 'error');
-  //       return;
-  //     }
-
-  //     setLoading(true);
-
-  //     try {
-  //       const response = await apiConnector({
-  //         method: 'POST',
-  //         url: merchantEndPoints?.CREATE_MERCHANT_API,
-  //         bodyData: formData,
-  //       });
-
-  //       if (response?.data?.data) {
-  //         setToastNotification('Merchant added successfully', 'success');
-  //         router.push('/agent/merchant');
-  //       }
-  //     } catch (error: any) {
-  //       setToastNotification(error?.message || 'Failed to add merchant', 'error');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<MerchantFormInterface>({
     resolver: yupResolver(MerchantValidation),
-    defaultValues: {
-      name: data ? data?.name : '',
-      email: data ? data?.email : '',
-      mobile: data ? data?.mobile : '',
-      company_name: data ? data?.company_name : '',
-      address: data ? data?.address : '',
-    },
+    defaultValues: {},
   });
+  console.log(errors, 'error');
 
   // console.log(data?.name,"defaultValues");
 
-  const onSubmitHandler = (data: any) => {
-    console.log(data, 'dataaa');
+  const onSubmitHandler = async (data: any) => {
+    // console.log(data, 'dataaa');
+    setLoading(false);
+    await apiConnector({
+      method: 'POST',
+      url: `${merchantEndPoints?.CREATE_MERCHANT_API}`,
+      bodyData: data,
+    })
+      .then((response: any) => {
+        setLoading(false);
+        setToastNotification(response?.data?.message, 'success');
+        router.push('/agent/merchant');
+
+        reset();
+      })
+      .catch((error: any) => {
+        setToastNotification(error?.message, 'error');
+        setLoading(false);
+      });
   };
   return (
     <div className="grid grid-cols-12 gap-4 md:gap-6">
@@ -141,9 +135,9 @@ export default function AddMerchantPage({ data = null }) {
                       id="input"
                       placeholder="Enter Name here"
                       label="Name"
-                      error={errors?.name?.message}
+                      error={errors?.merchant_name?.message}
                       control={control}
-                      name="name"
+                      name="merchant_name"
                     />
                   </div>
 
@@ -166,9 +160,9 @@ export default function AddMerchantPage({ data = null }) {
                       type="text"
                       id="input"
                       placeholder="Enter Mobile here"
-                      name="mobile"
+                      name="mobile_number"
                       label="Mobile"
-                      error={errors?.mobile?.message}
+                      error={errors?.mobile_number?.message}
                       control={control}
                     />
                   </div>
