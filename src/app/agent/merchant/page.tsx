@@ -5,6 +5,7 @@ import { merchantEndPoints } from '@/helper/ApiEndPoints';
 import { apiConnector } from '@/network/Apiconnector';
 import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
+import MerchantStore from './merchantStore';
 
 interface MerchantData {
   id?: string;
@@ -20,7 +21,7 @@ export default function MerchantPage() {
   const [merchantNumber, setMerchantNumber] = useState('');
   const [merchantData, setMerchantData] = useState<MerchantData | null>(null);
   const [searched, setSearched] = useState(false);
-  console.log(merchantData, 'merchantData');
+  console.log(merchantData?._id, 'merchantDataidd');
 
   const searchMerchant = async () => {
     // Validation: Check if merchant number is entered
@@ -245,6 +246,7 @@ export default function MerchantPage() {
               </div>
             </div>
           )}
+          <MerchantStore id={merchantData?._id} />
         </>
       )}
     </div>
