@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
+import { useRouter } from 'next/navigation';
 
 interface MerchantFormData {
   id?: string;
@@ -42,12 +43,28 @@ const StoreValidation = yup.object().shape({
     .matches(/^[0-9]{6}$/, 'Pincode must be exactly 6 digits'),
 });
 
-const AddMerchantStore = ({ item, setMerchantApiCall, setOpenIndex }: { item: any; setMerchantApiCall: any; setOpenIndex: any }) => {
+const AddMerchantStore = ({ 
+  item, 
+  setMerchantApiCall, 
+  setOpenIndex, 
+  isEditMode = true,
+  merchantId 
+}: { 
+  item?: any; 
+  setMerchantApiCall?: any; 
+  setOpenIndex?: any;
+  isEditMode?: boolean;
+  merchantId?: string;
+}) => {
   const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [loading, setLoading] = useState(false);
-console.log(item,"itemmsss");
+  const router = useRouter();
+  
+  console.log('AddMerchantStore - item:', item);
+  console.log('AddMerchantStore - merchantId prop:', merchantId);
+  console.log('AddMerchantStore - isEditMode:', isEditMode);
 
-  const merchantId = item?._id;
+  const storeId = item?._id;
   const {
     control,
     handleSubmit,
@@ -67,26 +84,63 @@ console.log(item,"itemmsss");
     },
   });
 
-  const onSubmitHandler = async (data: any) => {
+  // Handler for creating a new store
+  const handleCreateStore = async (data: any) => {
+    setLoading(true);
+    const payload = {
+      ...data,
+      merchant_id: merchantId,
+    };
+    
+    console.log('Creating store with payload:', payload);
+    console.log('Merchant ID being used:', merchantId);
+    
+    await apiConnector({
+      method: 'POST',
+      url: `${merchantEndPoints?.CREATE_MERCHANT_STORES_API}`,
+      bodyData: payload,
+    })
+      .then((response: any) => {
+        setLoading(false);
+        setToastNotification(response?.data?.message || 'Store created successfully!', 'success');
+        reset();
+        // Navigate back to merchant page
+        router.push('/agent/merchant');
+      })
+      .catch((error: any) => {
+        setToastNotification(error?.message || 'Failed to create store', 'error');
+        setLoading(false);
+      });
+  };
+
+  // Handler for updating an existing store
+  const handleUpdateStore = async (data: any) => {
     setLoading(true);
     await apiConnector({
       method: 'PUT',
-      url: `${merchantEndPoints?.UPDATE_MERCHANT_STORES_API}/${merchantId}`,
+      url: `${merchantEndPoints?.UPDATE_MERCHANT_STORES_API}/${storeId}`,
       bodyData: data,
     })
       .then((response: any) => {
         setLoading(false);
-        setToastNotification(response?.data?.message, 'success');
-        setMerchantApiCall((prev) => prev + 1); 
-        setOpenIndex(null)
-        // router.push('/agent/merchant');
-
+        setToastNotification(response?.data?.message || 'Store updated successfully!', 'success');
+        if (setMerchantApiCall) setMerchantApiCall((prev: number) => prev + 1);
+        if (setOpenIndex) setOpenIndex(null);
         reset();
       })
       .catch((error: any) => {
-        setToastNotification(error?.message, 'error');
+        setToastNotification(error?.message || 'Failed to update store', 'error');
         setLoading(false);
       });
+  };
+
+  // Main submit handler that routes to appropriate function
+  const onSubmitHandler = async (data: any) => {
+    if (isEditMode) {
+      await handleUpdateStore(data);
+    } else {
+      await handleCreateStore(data);
+    }
   };
 
   return (
@@ -108,7 +162,7 @@ console.log(item,"itemmsss");
             {/* Store Information Section */}
             <div className="mt-6">
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-                Store Information
+                {isEditMode ? 'Edit Store Information' : 'Create New Store'}
               </h3>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Input
@@ -185,7 +239,19 @@ console.log(item,"itemmsss");
                 />
               </div>
             </div>
-            <div className="mb-4 flex justify-end">
+            <div className="mb-4 flex justify-end gap-3">
+              {!isEditMode && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="mt-5 px-12"
+                  disabled={loading}
+                  type="button"
+                  onClick={() => router.push('/agent/merchant')}
+                >
+                  Cancel
+                </Button>
+              )}
               <Button
                 size="sm"
                 variant="primary"
@@ -194,7 +260,7 @@ console.log(item,"itemmsss");
                 disabled={loading}
                 type="submit"
               >
-                Edit
+                {loading ? 'Saving...' : (isEditMode ? 'Update Store' : 'Create Store')}
               </Button>
             </div>
           </form>

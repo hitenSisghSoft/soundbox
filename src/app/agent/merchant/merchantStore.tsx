@@ -3,6 +3,8 @@ import { merchantEndPoints } from '@/helper/ApiEndPoints';
 import { apiConnector } from '@/network/Apiconnector';
 import React, { useContext, useEffect, useState } from 'react';
 import AddMerchantStore from './addMerchantStore';
+import Button from '@/components/ui/button/Button';
+import { useRouter } from 'next/navigation';
 
 const MerchantStore = ({ id = '' }) => {
   const [loading, setLoading] = useState(false);
@@ -10,10 +12,16 @@ const MerchantStore = ({ id = '' }) => {
   const { setToastNotification } = useContext<any>(CustomAlertContext);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [merchantApiCall, setMerchantApiCall] = useState(0);
+  const router = useRouter();
 
   const toggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
+
+  const handleCreateStore = () => {
+    router.push(`/agent/merchant/create-store?merchantId=${id}`);
+  };
+
   console.log(merchantStores, 'merchantStores');
 
   const data = { merchantId: id };
@@ -43,9 +51,23 @@ const MerchantStore = ({ id = '' }) => {
   return (
     <div className="col-span-12">
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
+        <div className='flex justify-between items-center'>
+
         <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
           Merchant Stores
         </h2>
+         <Button
+                size="sm"
+                variant="primary"
+                customBg="bg-brand-500"
+                className="mb-4 px-12"
+                disabled={loading}
+                type="button"
+                onClick={handleCreateStore}
+                >
+                Create Store
+              </Button>
+                </div>
         
         <div className="rounded-base border-default overflow-hidden border shadow-xs">
           {merchantStores.map((item: any, index: number) => {

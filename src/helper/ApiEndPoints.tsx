@@ -20,5 +20,6 @@ export const merchantEndPoints = {
   DELETE_MERCHANT_API: `${BASE_URL}merchant/delete`,
   GET_ALL_MERCHANTS_API: `${BASE_URL}merchant/list`,
   GET_MERCHANT_STORES_API: `${BASE_URL}merchants/stores`,
+  CREATE_MERCHANT_STORES_API: `${BASE_URL}stores/create`,
   UPDATE_MERCHANT_STORES_API: `${BASE_URL}stores`,
 };
