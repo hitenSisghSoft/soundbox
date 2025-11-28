@@ -235,18 +235,26 @@ export default function MerchantPage() {
                     No merchant available with merchant number &quot;{merchantNumber}&quot;
                   </p>
 
-                  {/* Add Merchant Button */}
-                  <button
-                    onClick={handleAddMerchant}
-                    className="bg-brand-500 hover:bg-brand-600 inline-flex items-center justify-center rounded-lg px-6 py-2 text-sm font-medium text-white transition"
-                  >
-                    Add New Merchant
-                  </button>
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <button
+                      onClick={handleAddMerchant}
+                      className="bg-brand-500 hover:bg-brand-600 inline-flex items-center justify-center rounded-lg px-6 py-2 text-sm font-medium text-white transition"
+                    >
+                      Add New Merchant
+                    </button>
+                    <button
+                      onClick={handleClearSearch}
+                      className="inline-flex items-center justify-center rounded-lg border border-gray-200 bg-white px-6 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+                    >
+                      Clear Search
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           )}
-          <MerchantStore id={merchantData?._id} />
+          {merchantData && <MerchantStore id={merchantData?._id} />}
         </>
       )}
     </div>
