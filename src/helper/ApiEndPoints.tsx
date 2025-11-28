@@ -23,3 +23,10 @@ export const merchantEndPoints = {
   CREATE_MERCHANT_STORES_API: `${BASE_URL}stores/create`,
   UPDATE_MERCHANT_STORES_API: `${BASE_URL}stores`,
 };
+
+export const machineEndPoints = {
+  GET_MACHINE_By_ID_API: `${BASE_URL}Machines/store`,
+  GET_ALL_MACHINE_API: `${BASE_URL}Machines`,
+  CREATE_MACHINE_API: `${BASE_URL}Machines`,
+  UPDATE_MACHINE_API: `${BASE_URL}Machines`,
+};

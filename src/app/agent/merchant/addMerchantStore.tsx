@@ -8,6 +8,7 @@ import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { useRouter } from 'next/navigation';
+import StoresMachine from './machine/page';
 
 interface MerchantFormData {
   id?: string;
@@ -91,9 +92,6 @@ const AddMerchantStore = ({
       ...data,
       merchant_id: merchantId,
     };
-    
-    console.log('Creating store with payload:', payload);
-    console.log('Merchant ID being used:', merchantId);
     
     await apiConnector({
       method: 'POST',
@@ -266,6 +264,7 @@ const AddMerchantStore = ({
           </form>
 
           {/* Action Buttons */}
+          <StoresMachine  storeId={storeId}/>
         </div>
       </div>
     </div>
