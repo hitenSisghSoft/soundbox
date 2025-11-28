@@ -51,16 +51,17 @@ const MerchantStore = ({ id = '' }) => {
   return (
     <div className="col-span-12">
       <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
-        <div className='flex justify-between items-center'>
+        <div className='flex justify-between items-center bg-gray-200 align-center h-18 rounded-sm px-2'>
 
-        <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
+        <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white rounded-b-xl 
+">
           Merchant Stores
         </h2>
          <Button
                 size="sm"
                 variant="primary"
                 customBg="bg-brand-500"
-                className="mb-4 px-12"
+                className=" px-12"
                 disabled={loading}
                 type="button"
                 onClick={handleCreateStore}
