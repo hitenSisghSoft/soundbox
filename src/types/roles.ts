@@ -9,7 +9,7 @@ export enum UserRole {
 
 export interface NavItem {
   name: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<any>;
   path?: string;
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 }

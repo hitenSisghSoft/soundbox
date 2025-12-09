@@ -25,56 +25,56 @@ export const useRole = () => {
 const roleMenuConfig: Record<UserRole, NavItem[]> = {
   [UserRole.ADMIN]: [
     {
-      icon: <GridIcon />,
+      icon: GridIcon,
       name: 'Dashboard',
       subItems: [{ name: 'Ecommerce', path: '/', pro: false }],
     },
     {
-      icon: <UserCircleIcon />,
+      icon: UserCircleIcon,
       name: 'User Profile',
       path: '/profile',
     },
     {
-      icon: <BoxCubeIcon />,
+      icon: BoxCubeIcon,
       name: 'Employees',
       path: '/employee',
     },
   ],
   [UserRole.AGENT]: [
     {
-      icon: <GridIcon />,
+      icon: GridIcon,
       name: 'Dashboard',
       subItems: [{ name: 'Overview', path: '/agent', pro: false }],
     },
 
     {
-      icon: <UserCircleIcon />,
+      icon: UserCircleIcon,
       name: 'Profile',
       path: '/agent/profile',
     },
     {
-      icon: <BoxCubeIcon />,
+      icon: BoxCubeIcon,
       name: 'Merchant',
       path: '/agent/merchant',
     },
   ],
   [UserRole.OPERATIONS]: [
     {
-      icon: <GridIcon />,
+      icon: GridIcon,
       name: 'Dashboard',
       subItems: [{ name: 'Overview', path: '/operations', pro: false }],
     },
   ],
   [UserRole.SUPPORT]: [
     {
-      icon: <GridIcon />,
+      icon: GridIcon,
       name: 'Dashboard',
       subItems: [{ name: 'Overview', path: '/support', pro: false }],
     },
   ],
   [UserRole.MERCHANT]: [
     {
-      icon: <GridIcon />,
+      icon: GridIcon,
       name: 'Dashboard',
       subItems: [{ name: 'Overview', path: '/merchant', pro: false }],
     },

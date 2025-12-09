@@ -88,7 +88,7 @@ const AgentSidebar: React.FC = () => {
                     : 'menu-item-icon-inactive'
                 }`}
               >
-                {nav.icon}
+                <nav.icon />
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
                 <span className={`menu-item-text`}>{nav.name}</span>
@@ -116,7 +116,7 @@ const AgentSidebar: React.FC = () => {
                     isActive(nav.path) ? 'menu-item-icon-active' : 'menu-item-icon-inactive'
                   }`}
                 >
-                  {nav.icon}
+                  <nav.icon />
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className={`menu-item-text`}>{nav.name}</span>

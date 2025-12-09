@@ -19,7 +19,7 @@ export default function AgentProfilePage() {
       </div>
 
       {/* Profile Information */}
-      <div className="col-span-12 md:col-span-6">
+      <div className="col-span-12 md:col-span-12">
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
           <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
             Profile Information
@@ -45,7 +45,7 @@ export default function AgentProfilePage() {
       </div>
 
       {/* Account Settings */}
-      <div className="col-span-12 md:col-span-6">
+      {/* <div className="col-span-12 md:col-span-6">
         <div className="rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-800 dark:bg-gray-900">
           <h2 className="mb-4 text-lg font-semibold text-gray-800 dark:text-white">
             Account Settings
@@ -62,7 +62,7 @@ export default function AgentProfilePage() {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

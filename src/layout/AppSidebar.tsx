@@ -9,7 +9,7 @@ import { ChevronDownIcon, HorizontaLDots } from '../icons/index';
 
 type NavItem = {
   name: string;
-  icon: React.ReactNode;
+  icon: React.ComponentType<any>;
   path?: string;
   subItems?: { name: string; path: string; pro?: boolean; new?: boolean }[];
 };
@@ -42,7 +42,7 @@ const AppSidebar: React.FC = () => {
                     : 'menu-item-icon-inactive'
                 }`}
               >
-                {nav.icon}
+                <nav.icon />
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
                 <span className={`menu-item-text`}>{nav.name}</span>
@@ -70,7 +70,7 @@ const AppSidebar: React.FC = () => {
                     isActive(nav.path) ? 'menu-item-icon-active' : 'menu-item-icon-inactive'
                   }`}
                 >
-                  {nav.icon}
+                  <nav.icon />
                 </span>
                 {(isExpanded || isHovered || isMobileOpen) && (
                   <span className={`menu-item-text`}>{nav.name}</span>
