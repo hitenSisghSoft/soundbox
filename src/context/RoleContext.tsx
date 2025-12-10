@@ -50,7 +50,7 @@ const roleMenuConfig: Record<UserRole, NavItem[]> = {
     {
       icon: UserCircleIcon,
       name: 'Profile',
-      path: '/agent/profile',
+      path: '/profile',
     },
     {
       icon: BoxCubeIcon,

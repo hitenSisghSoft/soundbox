@@ -2,6 +2,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export const authEndPoints = {
   LOGIN_API: `${BASE_URL}users/login`,
+  UPDATE_PROFILE_API: `${BASE_URL}users/update_profile`,
 };
 
 export const employeeEndPoints = {

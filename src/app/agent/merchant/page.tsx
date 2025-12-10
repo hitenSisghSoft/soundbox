@@ -21,7 +21,6 @@ export default function MerchantPage() {
   const [merchantNumber, setMerchantNumber] = useState('');
   const [merchantData, setMerchantData] = useState<MerchantData | null>(null);
   const [searched, setSearched] = useState(false);
-  console.log(merchantData?._id, 'merchantDataidd');
 
   const searchMerchant = async () => {
     // Validation: Check if merchant number is entered
